@@ -6,9 +6,17 @@ format: html
 editor: visual
 ---
 
-## Preamble
+## Analysis of EJ Screen Data in Alaska
+
+Alaska is a unique state in the United States, with a large rural indegnous population, as well as a significant infrastructure for resource extraction. EJ Screen, subsidized by the EPA, collects both social and environmental data for the entire population of the United States.
+
+**Objective**: Use EJ Screen data combined with remote sensing to analyze the distribution of social and environmental variables in Alaska by census tract.
+
+## Loading Packages
 
 ```{r}
+#| message: false
+#| warning: false
 #reading in libraries 
 library(tidyverse) 
 library(sf) 
@@ -16,13 +24,24 @@ library(here)
 library(stars) # for raster data
 library(tmap) # for static and interactive maps 
 library(viridis) 
+```
+
+## Importing Data
+
+Loading national data from EJ Screen and filtering the data to Alaska
+
+```{r}
+#| message: false
+#| warning: false
 #loading data (Census block group level) 
 ejscreen <- sf::st_read(here::here("data","ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb")) 
 #Filtering only for AK
 ejscreen_ak <- ejscreen %>% filter(ST_ABBREV == "AK")
 ```
 
-## Making Map 1 (Percentile of Low Life Expectancy Households for Alaska)
+## Visualizations
+
+The first map analyzes the percentile of low life expectancy households for Alaska by census tract
 
 ```{r}
 tm_shape(ejscreen_ak) + 
@@ -34,7 +53,7 @@ tm_shape(ejscreen_ak) +
         position = tm_pos_out("center","top"))
 ```
 
-## Making Map 2 (Percentile of Low income households by Census Tract in Alaska)
+The second map analyzes the percentile of households with less than a highschool level education for Alaska by census tract
 
 ```{r}
 tm_shape(ejscreen_ak) + 
@@ -49,5 +68,13 @@ tm_shape(ejscreen_ak) +
 ## What do the maps communicate?
 
 I made two maps of Alaska, both are organized by Census tract, using EJScreen data from the EPA. The first describes the percentile of low life expectancy households for the state, with 0 being the highest concentration of low life expectancy households in the state, and 100 being the lowest. The second map describes the concentration of households in a tract with less than a highschool education, organized by percentile. These maps depict a relationship between low life expectancy and educational access, as many of the tracts which rank highly for life expectancy also rank highly for educational access, and vise versa. What is likely happening is that groups who have low educational access have reduced access to health care or other life-extending resources, which reduces their life expectancy for the household.
+
+## Further Analysis
+
+-   Comparison of like census tracts with Alaska to identify demographic and social trends
+
+-   Analysis of environmental variables in the dataset in addition to social variables, and perhaps analyzing on a raster level.
+
+-   Additional work engaging with infrastructure access, and attempting to establish a causal mechanism between access and education/income.
 
 ------------------------------------------------------------------------
